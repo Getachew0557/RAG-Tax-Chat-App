@@ -127,12 +127,12 @@ cd rag-tax-chat-app/backend
 5. Create .env File:
 ```bash
 PINECONE_API_KEY=your-pinecone-api-key
-MONGODB_URI=mongodb://localhost:27017/rag_tax_chat
-GEMINI_API_KEY=AIzaSyCvKr-V1PRVpSr1Za72rRYDnKSUVfy6kC0
+MONGODB_URI=your mongodb url
+GEMINI_API_KEY=your Gemini API key
 HF_HUB_DISABLE_SYMLINKS_WARNING=1
 TF_ENABLE_ONEDNN_OPTS=0
 ```
-Replace your-pinecone-api-key with your Pinecone API key.
+Replace your-pinecone, Gemini-api-key Mongodb url with your API key and mongo db url respectivly.
 
 6. Start MongoDB (if local):
 
