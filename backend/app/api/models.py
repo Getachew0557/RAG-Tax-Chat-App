@@ -10,3 +10,4 @@ class ChatResponse(BaseModel):
     response: str
     session_id: str
     language: str
+    

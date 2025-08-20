@@ -14,17 +14,15 @@ class Embeddings:
         self.init_pinecone()
 
     def init_pinecone(self):
-        # Initialize Pinecone with the new API
         self.pinecone_client = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
         index_name = 'tax-documents'
 
-        # Check if index exists, create if it doesn't
         if index_name not in self.pinecone_client.list_indexes().names():
             self.pinecone_client.create_index(
                 name=index_name,
-                dimension=384,  # Matches the dimension of paraphrase-multilingual-MiniLM-L12-v2
+                dimension=384,
                 metric='cosine',
-                spec=ServerlessSpec(cloud='aws', region='us-east-1')  # Changed to us-east-1 for free tier
+                spec=ServerlessSpec(cloud='aws', region='us-east-1')
             )
         self.pinecone_index = self.pinecone_client.Index(index_name)
 

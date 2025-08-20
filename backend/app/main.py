@@ -9,7 +9,6 @@ load_dotenv()
 
 app = FastAPI(title="RAG Tax Chat API")
 
-# Enable CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -18,10 +17,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API routes
 app.include_router(router, prefix="/api")
 
-# Preprocess documents on startup
 @app.on_event("startup")
 async def startup_event():
     preprocess_documents()

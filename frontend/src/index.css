@@ -2,71 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: 'Roboto', 'Noto Sans Ethiopic', sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.chat-bubble-user {
+  @apply bg-blue-500 text-white rounded-2xl p-4 max-w-sm ml-auto mb-3 shadow-lg;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.chat-bubble-bot {
+  @apply bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white rounded-2xl p-4 max-w-sm mr-auto mb-3 shadow-lg;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.chat-bubble-typing {
+  @apply bg-gray-200 dark:bg-gray-700 rounded-2xl p-4 max-w-sm mr-auto mb-3 animate-pulse flex items-center space-x-2;
+}
+
+.dot {
+  @apply h-2 w-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce;
+}
+
+.dot:nth-child(2) { animation-delay: 0.1s; }
+.dot:nth-child(3) { animation-delay: 0.2s; }
+
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-200 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-500 dark:bg-blue-400 rounded-full;
+}
+
+/* Neumorphic button style */
+.neumorphic-btn {
+  @apply bg-gray-100 dark:bg-gray-800 rounded-lg shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.9)] dark:shadow-[3px_3px_6px_rgba(0,0,0,0.5),-3px_-3px_6px_rgba(75,85,99,0.5)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)] dark:hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5),inset_-2px_-2px_4px_rgba(75,85,99,0.5)] transition-all duration-200;
 }
