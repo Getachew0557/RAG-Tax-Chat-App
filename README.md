@@ -1,212 +1,276 @@
  
-# RAG-Based Chat App 
-## Objective
-Set up the development environment on Windows and define the project file structure for a RAG-based chat application supporting Amharic and English for a legal taxing system, using React Vite with Tailwind CSS for the frontend.
+# RAG-Based Tax Chat Application
+## Overview
+The RAG Tax Chat Application is a bilingual (English and Amharic) chat-based assistant designed to answer tax-related queries in Ethiopia. It leverages Retrieval-Augmented Generation (RAG) to retrieve relevant tax information from a knowledge base and generate accurate, context-aware responses using the Gemini 2.0 Flash model. The application features a modern, responsive frontend with a sleek UI, dark mode, and chat history persistence, making it user-friendly and accessible.
 
-## Environmental Setup
+## Features
+- Bilingual Support: Handles queries in English and Amharic, with automatic language detection.
+- Accurate Calculations: Performs precise numerical calculations (e.g., net salary) using a robust knowledge base and Gemini API.
+- Modern UI: Responsive frontend with neumorphic design, animations, dark mode, and a sidebar for settings.
+- Chat History: Persists chat messages across sessions using localStorage.
+- Scalable Backend: Integrates Pinecone for vector search, MongoDB for session storage, and FastAPI for efficient API handling.
+- Docker Support: Containerized for easy deployment.
+
+## Tech Stack
+
+### Backend
+
+- FastAPI: High-performance Python web framework for building APIs.
+- Gemini 2.0 Flash: AI model for generating accurate and multilingual responses.
+- Pinecone: Vector database for efficient document retrieval.
+- MongoDB: NoSQL database for storing chat sessions.
+- Sentence Transformers: Generates embeddings for documents (paraphrase-multilingual-MiniLM-L12-v2).
+- Python Libraries:
+    - requests: For Gemini API calls.
+    - pymongo: MongoDB client.
+    - python-dotenv: Environment variable management.
+    - langdetect: Language detection for queries.
+    - uvicorn: ASGI server for FastAPI.
+
+### Frontend
+
+- React: JavaScript library for building the UI.
+- Vite: Fast build tool and development server.
+- Tailwind CSS: Utility-first CSS framework for styling.
+- Framer Motion: Animation library for smooth transitions.
+- Axios: HTTP client for API requests.
+- Google Fonts: Noto Sans Ethiopic for Amharic support, Roboto for English.
+
+### Deployment
+- Docker: Containerizes backend and frontend for consistent deployment.
+- MongoDB: Local or Atlas for session storage.
+
+## Project Structure 
+```bash 
+rag-tax-chat-app/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   └── models.py
+│   │   ├── rag/
+│   │   │   ├── __init__.py
+│   │   │   ├── pipeline.py
+│   │   │   └── embeddings.py
+│   │   ├── knowledge_base/
+│   │   │   ├── documents/
+│   │   │   │   ├── amharic/
+│   │   │   │   │   ├── sample_tax_document_am.json
+│   │   │   │   │   └── ethiopia_tax_rates_am.json
+│   │   │   │   └── english/
+│   │   │   │       ├── sample_tax_document_en.json
+│   │   │   │       └── ethiopia_tax_rates_en.json
+│   │   │   └── preprocess.py
+│   │   ├── utils/
+│   │   │   ├── __init__.py
+│   │   │   └── language.py
+│   │   └── main.py
+│   ├── tests/
+│   │   └── test_rag.py
+│   ├── .env
+│   ├── requirements.txt
+│   └── Dockerfile
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ChatWindow.jsx
+│   │   │   ├── LanguageToggle.jsx
+│   │   │   └── ThemeToggle.jsx
+│   │   ├── assets/
+│   │   │   └── logo.png
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   ├── index.css
+│   │   └── services/
+│   │       └── api.js
+│   ├── public/
+│   │   └── favicon.ico
+│   ├── index.html
+│   ├── vite.config.js
+│   ├── package.json
+│   └── Dockerfile
+└── docker-compose.yml
+```
+
+## Setup Instructions
 ### Prerequisites
 
 - Python: Version 3.10 or higher for backend development.
 - Node.js: Version 18.x or higher for React Vite frontend.
+- MongoDB: Local installation or MongoDB Atlas.
 - Docker: Optional for containerization and deployment.
-- Git: For version control.
-- IDE: VS Code recommended for coding.
-- OS: Windows 10 or 11.
+- Pinecone Account: API key from pinecone.io.
+- Gemini API Key: Provided or obtained from Google Cloud.
 
-### Step 1: Install Dependencies
+### Backend Setup
 
-#### Python Environment:
-
-- Download and install Python 3.10+ from python.org. Ensure "Add Python to PATH" is checked during installation.
-- Open Command Prompt (cmd) or PowerShell and set up a virtual environment:
+1. Create virtual environment
 ```bash 
 python -m venv venv
 venv\Scripts\activate
 ```
+2. Install dependency
 
-
-- Install core Python packages:
 ```bash 
-pip install fastapi uvicorn transformers torch sentence-transformers langdetect faiss-cpu pinecone-client pymongo python-dotenv
+pip install -r requirements.txt
 ```
-
-
-
-
-#### Node.js and React Vite:
-
-- Download and install Node.js 18.x from nodejs.org. Verify with node --version and npm --version.
-- Initialize a React Vite project:
+3. Navigate to Backend Directory:
 ```bash 
-npm create vite@latest frontend -- --template react
-cd frontend
-npm install
-npm install axios @tailwindcss/vite
+cd rag-tax-chat-app/backend
 ```
+4. Vector Database (Pinecone):
 
-
-- Note: We use @tailwindcss/vite as specified in the provided vite.config.js instead of the standalone tailwindcss package.
-
-
-#### Vector Database (Pinecone):
-
-- Sign up at pinecone.io and obtain an API key.
-- Alternatively, use FAISS locally (already installed via faiss-cpu).
-
-
-#### MongoDB:
-
-- Install MongoDB Community Edition from mongodb.com. Follow the Windows installation guide and ensure MongoDB service is running.
-- Alternatively, use MongoDB Atlas for cloud hosting.
-- Verify MongoDB: mongo --version in Command Prompt or connect via MongoDB Compass.
-- Ensure MongoDB is accessible at mongodb://localhost:27017 or configure the Atlas connection string.
-
-#### Docker (Optional for Deployment):
-
-- Install Docker Desktop for Windows from docker.com. Enable WSL 2 if prompted.
-- Verify: docker --version in Command Prompt or PowerShell.
-
-#### Git:
-
-- Install Git for Windows from git-scm.com.
-- Verify: git --version.
-
-
-
-### Step 2: Verify Environment
-
-- Test Python: python --version
-- Test Node.js: node --version
-- Test MongoDB: mongo --version or connect via MongoDB Compass.
-- Test Docker (if installed): docker --version
-- Test Vite: cd frontend && npm run dev (should start a dev server at http://localhost:5173).
-
-## Project File Structure
-The project is organized into backend and frontend directories, with the frontend using React Vite and Tailwind CSS via the @tailwindcss/vite plugin.
+  - Sign up at pinecone.io and obtain an API key.
+  - Alternatively, use FAISS locally (already installed via faiss-cpu).
+5. Create .env File:
 ```bash
-rag-tax-chat-app/
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── __init__.py
-│   │   │   ├── routes.py        # FastAPI routes for chat and language detection
-│   │   │   └── models.py        # Pydantic models for request/response
-│   │   ├── rag/
-│   │   │   ├── __init__.py
-│   │   │   ├── pipeline.py      # RAG pipeline (retrieval + generation)
-│   │   │   └── embeddings.py    # Document embedding creation
-│   │   ├── knowledge_base/
-│   │   │   ├── documents/
-│   │   │   │   ├── amharic/     # Amharic tax documents (JSON/Markdown)
-│   │   │   │   └── english/     # English tax documents (JSON/Markdown)
-│   │   │   └── preprocess.py    # Script to preprocess and index documents
-│   │   ├── utils/
-│   │   │   ├── __init__.py
-│   │   │   └── language.py      # Language detection and utilities
-│   │   └── main.py              # FastAPI app entry point
-│   ├── tests/
-│   │   └── test_rag.py          # Unit tests for RAG pipeline
-│   ├── .env                     # Environment variables (e.g., Pinecone API key)
-│   ├── requirements.txt         # Python dependencies
-│   └── Dockerfile               # Docker configuration for backend
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── ChatWindow.jsx   # Chat UI component
-│   │   │   └── LanguageToggle.jsx # Language switcher component
-│   │   ├── assets/              # Static assets (e.g., images, fonts)
-│   │   ├── App.jsx              # Main React app
-│   │   ├── main.jsx             # Vite entry point
-│   │   ├── index.css            # Tailwind CSS styles
-│   │   └── services/
-│   │       └── api.js           # API calls to backend
-│   ├── public/                  # Static files (e.g., favicon)
-│   ├── index.html               # Vite HTML template
-│   ├── vite.config.js           # Vite configuration with Tailwind
-│   ├── package.json             # Node dependencies
-│   └── Dockerfile               # Docker configuration for frontend
-├── docker-compose.yml           # Docker Compose for multi-container setup
-└── README.md                    # Project documentation
-```
-#### Initialize Project
-
-#### Create Root Directory:
-```bash 
-mkdir rag-tax-chat-app
-cd rag-tax-chat-app
-```
-
-#### Backend Setup:
-```bash 
-mkdir backend\app\api backend\app\rag backend\app\knowledge_base\documents\amharic backend\app\knowledge_base\documents\english backend\app\utils backend\tests
-echo. > backend\app\__init__.py
-echo. > backend\app\api\__init__.py
-echo. > backend\app\rag\__init__.py
-echo. > backend\app\utils\__init__.py
-echo. > backend\app\main.py
-echo. > backend\app\api\routes.py
-echo. > backend\app\api\models.py
-echo. > backend\app\rag\pipeline.py
-echo. > backend\app\rag\embeddings.py
-echo. > backend\app\knowledge_base\preprocess.py
-echo. > backend\tests\test_rag.py
-echo. > backend\.env
-echo. > backend\requirements.txt
-echo. > backend\Dockerfile
-```
-
-#### Frontend Setup (React Vite):
-```bash 
-npm create vite@latest frontend -- --template react
-cd frontend
-npm install
-npm install axios @tailwindcss/vite
-mkdir src\components src\services src\assets
-echo. > src\components\ChatWindow.jsx
-echo. > src\components\LanguageToggle.jsx
-echo. > src\services\api.js
-cd ..
-```
-
-#### Docker and Root Files:
-```bash 
-echo. > docker-compose.yml
-echo. > README.md
-```
-
-
-### Populate Key Files
-
-#### backend/requirements.txt:
-```bash
-fastapi==0.115.0
-uvicorn==0.30.6
-transformers==4.44.2
-torch==2.4.1
-sentence-transformers==3.1.1
-langdetect==1.0.9
-faiss-cpu==1.8.0
-pinecone-client==5.0.1
-pymongo==4.8.0
-python-dotenv==1.0.1
-```
-
-```bash backend/.env (Example):
 PINECONE_API_KEY=your-pinecone-api-key
 MONGODB_URI=mongodb://localhost:27017/rag_tax_chat
+GEMINI_API_KEY=AIzaSyCvKr-V1PRVpSr1Za72rRYDnKSUVfy6kC0
+HF_HUB_DISABLE_SYMLINKS_WARNING=1
+TF_ENABLE_ONEDNN_OPTS=0
+```
+Replace your-pinecone-api-key with your Pinecone API key.
+
+6. Start MongoDB (if local):
+
+```bash
+net start MongoDB  # Windows
+# OR
+mongod  # Linux/Mac
 ```
 
-```bash frontend/vite.config.js (As provided):
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss()
-  ],
-})
+7. Run Backend:
 
+```bash
+uvicorn app.main:app --reload
 ```
+The API will be available at `http://localhost:8000`.
+
+### Frontend Setup
+
+1. Navigate to Frontend Directory:
+```bash
+cd rag-tax-chat-app/frontend
+```
+2. Install Dependencies:
+```bash
+npm install
+```
+3. Run Frontend:
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:5173`.
+
+### Docker Setup
+1. Create docker-compose.yml
+```bash
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - MONGODB_URI=${MONGODB_URI}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - HF_HUB_DISABLE_SYMLINKS_WARNING=1
+      - TF_ENABLE_ONEDNN_OPTS=0
+    volumes:
+      - ./backend:/app
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+```
+2. Run with Docker:
+```bash
+docker-compose up
+```
+## Usage
+
+1. Access the App:
+  - Open http://localhost:5173 in a browser.
+  - Toggle between English and Amharic using the sidebar (or header on mobile).
+  - Switch between light and dark modes.
+2. Ask Questions:
+  - Enter tax-related queries (e.g., "Calculate net salary if my gross salary is 25000 Birr with tax 35%").
+  - Press "Send" or Enter to get responses.
+  - Use the "Clear Chat" button to reset the conversation.
+
+3. Example API Request:
+```bash 
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Calculate net salary if my gross salary is 25000 Birr with tax 35%", "language": "en"}'
+```
+Expected Response:
+```bash
+{
+  "response": "Your net salary is 16,250 Birr after a 35% tax on a gross salary of 25,000 Birr.",
+  "session_id": "<uuid>",
+  "language": "en"
+}
+```
+Example Frontend Code (Sending a message):
+```bash 
+// frontend/src/services/api.js
+import axios from 'axios'
+
+const API_URL = 'http://localhost:8000/api'
+
+export const sendMessage = async (message, sessionId, language) => {
+  try {
+    const response = await axios.post(`${API_URL}/chat`, {
+      message,
+      session_id: sessionId,
+      language
+    })
+    return response.data
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Failed to send message')
+  }
+}
+```
+Example Backend Code (Processing a query):
+```bash
+# backend/app/rag/pipeline.py
+def process_query(self, query, language):
+    retrieved_docs = self.embeddings.query(query, language, top_k=3)
+    context = "\n".join([doc['text'] for doc in retrieved_docs])
+    prompt = (
+        f"Context: {context}\n\n"
+        f"Question: {query}\n"
+        f"Instructions: Provide a clear, concise, and accurate answer in {language}. "
+        f"For numerical calculations, show step-by-step reasoning and ensure accuracy. "
+        f"Do not repeat the question or context in the answer."
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'X-goog-api-key': self.gemini_api_key
+    }
+    data = {
+        'contents': [{'parts': [{'text': prompt}]}]
+    }
+    response = requests.post(self.gemini_url, headers=headers, json=data)
+    result = response.json()
+    generated_text = result['candidates'][0]['content']['parts'][0]['text'].strip()
+    cleaned_response = re.sub(r'^(Context|Question):.*?\n', '', generated_text, flags=re.MULTILINE)
+    return cleaned_response
+```
+
+## License
+
+MIT License. See LICENSE for details.
+
